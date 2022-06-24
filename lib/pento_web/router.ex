@@ -21,6 +21,12 @@ defmodule PentoWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  ## liveview routes
+  scope "/", PentoWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
     live "/guess", WrongLive
   end
 
