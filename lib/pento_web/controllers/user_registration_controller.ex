@@ -3,7 +3,6 @@ defmodule PentoWeb.UserRegistrationController do
 
   alias Pento.Accounts
   alias Pento.Accounts.User
-  alias PentoWeb.UserAuth
 
   def new(conn, _params) do
     changeset = Accounts.change_user_registration(%User{})
@@ -20,8 +19,12 @@ defmodule PentoWeb.UserRegistrationController do
           )
 
         conn
-        |> put_flash(:info, "User created successfully.")
-        |> UserAuth.log_in_user(user)
+        |> put_flash(
+          :info,
+          "User created successfully. Please check your email for confirmation instructions."
+        )
+        # |> UserAuth.log_in_user(user)
+        |> redirect(to: Routes.user_session_path(conn, :new))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
