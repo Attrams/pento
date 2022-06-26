@@ -7,6 +7,7 @@ defmodule Pento.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :username, :string
 
     timestamps()
   end
@@ -30,8 +31,9 @@ defmodule Pento.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :username])
     |> validate_email()
+    |> validate_username()
     |> validate_password(opts)
   end
 
@@ -42,6 +44,14 @@ defmodule Pento.Accounts.User do
     |> validate_length(:email, max: 160)
     |> unsafe_validate_unique(:email, Pento.Repo)
     |> unique_constraint(:email)
+  end
+
+  defp validate_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, max: 24)
+    |> unsafe_validate_unique(:username, Pento.Repo)
+    |> unique_constraint(:username)
   end
 
   defp validate_password(changeset, opts) do
