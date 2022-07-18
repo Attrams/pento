@@ -2,5 +2,5 @@
     <h2>Survey</h2>
 </section>
 <section class="row">
-    <%= live_component FormComponent, user: @current_user %>
+    <%= live_component FormComponent, user: @current_user, id: "demographic-form-#{@current_user.id}" %>
 </section>
