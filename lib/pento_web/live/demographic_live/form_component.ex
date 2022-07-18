@@ -16,4 +16,20 @@ defmodule PentoWeb.DemographicLive.FormComponent do
   def assign_changeset(%{assigns: %{demographic: demographic}} = socket) do
     assign(socket, :changeset, Survey.change_demographic(demographic))
   end
+
+  @impl true
+  def handle_event("save", %{"demographic" => demographic_params}, socket) do
+    {:noreply, save_demographic(socket, demographic_params)}
+  end
+
+  defp save_demographic(socket, demographic_params) do
+    case Survey.create_demographic(demographic_params) do
+      {:ok, demographic} ->
+        # Coming soon
+        socket
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        assign(socket, changeset: changeset)
+    end
+  end
 end
