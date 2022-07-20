@@ -5,7 +5,7 @@ defmodule PentoWeb.SurveyLive do
 
   @impl true
   def mount(_params, %{"user_token" => token} = _session, socket) do
-    {:ok, socket |> assign_user(token)}
+    {:ok, socket |> assign_user(token) |> assign_demographic()}
   end
 
   @impl true
@@ -23,5 +23,9 @@ defmodule PentoWeb.SurveyLive do
     socket
     |> put_flash(:info, "Demographic created successfully")
     |> assign(:demographic, demographic)
+  end
+
+  defp assign_demographic(%{assigns: %{current_user: current_user}} = socket) do
+    assign(socket, :demographic, Survey.get_demographic_by_user(current_user))
   end
 end
