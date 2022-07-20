@@ -25,7 +25,7 @@ defmodule PentoWeb.DemographicLive.FormComponent do
   defp save_demographic(socket, demographic_params) do
     case Survey.create_demographic(demographic_params) do
       {:ok, demographic} ->
-        # Coming soon
+        send(self(), {:created_demographic, demographic})
         socket
 
       {:error, %Ecto.Changeset{} = changeset} ->
